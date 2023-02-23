@@ -2,13 +2,16 @@ package com.capstone.Ae_bank.auth;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+
 import lombok.*;
+import org.hibernate.annotations.NaturalId;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -24,9 +27,11 @@ import java.util.Set;
 @Table(
         name = "users",
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = "username")
-        }
-)
+                @UniqueConstraint(columnNames = {"username"
+        }),@UniqueConstraint(columnNames = {
+        "email"
+})
+        })
 public class User implements UserDetails {
 
     @Id
@@ -34,11 +39,15 @@ public class User implements UserDetails {
     private Long id;
 
     @NotBlank
-    @Size(min = 6, max = 42)
+    @Size(max = 40)
     private String username;
-
+    @NaturalId
+    @NotBlank
+    @Size(max = 40)
+    @Email
     private String email;
     @NotBlank
+    @Size(max = 100)
     @JsonIgnore
     private String password;
 

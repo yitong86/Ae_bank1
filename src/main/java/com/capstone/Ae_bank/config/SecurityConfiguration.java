@@ -1,4 +1,4 @@
-package com.capstone.Ae_bank.security;
+package com.capstone.Ae_bank.config;
 
 import com.capstone.Ae_bank.security.AuthTokenFilter;
 

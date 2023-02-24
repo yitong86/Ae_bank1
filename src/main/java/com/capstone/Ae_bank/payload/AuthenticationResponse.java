@@ -1,4 +1,4 @@
-package com.capstone.Ae_bank.auth;
+package com.capstone.Ae_bank.payload;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

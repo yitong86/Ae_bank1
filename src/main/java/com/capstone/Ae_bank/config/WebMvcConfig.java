@@ -1,4 +1,4 @@
-package com.capstone.Ae_bank.security;
+package com.capstone.Ae_bank.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;

@@ -1,5 +1,7 @@
 //package com.capstone.Ae_bank.auth;
 //
+//import com.capstone.Ae_bank.payload.AuthenticationResponse;
+//import com.capstone.Ae_bank.payload.RegisterRequest;
 //import lombok.RequiredArgsConstructor;
 //import org.springframework.http.ResponseEntity;
 //import org.springframework.web.bind.annotation.PostMapping;
@@ -8,7 +10,7 @@
 //import org.springframework.web.bind.annotation.RestController;
 //
 //@RestController
-//@RequestMapping("/api/v1/auth")
+//@RequestMapping("/api/auth")
 //@RequiredArgsConstructor
 //public class AuthenticationController {
 //    private final AuthenticationService service;

@@ -9,6 +9,9 @@ import com.capstone.Ae_bank.payload.RegisterRequest;
 import com.capstone.Ae_bank.repositories.RoleRepository;
 import com.capstone.Ae_bank.repositories.UserRepository;
 import com.capstone.Ae_bank.security.JwtService;
+
+
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,76 +25,51 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
-import java.net.URI;
 import java.util.Collections;
 
+import static com.capstone.Ae_bank.auth.ERole.USER;
+
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    @Autowired
-    AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
+    private JwtService jwtGenerator;
 
-    @Autowired
-    UserRepository userRepository;
 
-    @Autowired
-    RoleRepository roleRepository;
-
-    @Autowired
-    PasswordEncoder passwordEncoder;
-
-    @Autowired
-    JwtService tokenProvider;
-
-    @PostMapping("/signin")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginDto){
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        loginRequest.getEmail(),
-                        loginRequest.getPassword()
-                )
-        );
-
+                        loginDto.getUsername(),
+                        loginDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        String jwt = tokenProvider.generateToken((UserDetails) authentication);
-        return ResponseEntity.ok(new AuthenticationResponse(jwt));
+        String token = jwtGenerator.generateToken(authentication);
+        //return ResponseEntity.ok(new AuthenticationResponse(token));
+       return new ResponseEntity<>(new AuthResponseDTO(token), HttpStatus.OK);
     }
 
-    @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest signUpRequest) {
-        if(userRepository.existsByUsername(signUpRequest.getUsername())) {
-            return new ResponseEntity(new ApiResponse(false, "Username is already taken!"),
-                    HttpStatus.BAD_REQUEST);
+    @PostMapping("/register")
+    public ResponseEntity<String> register(@RequestBody RegisterRequest registerDto) {
+        if (userRepository.existsByUsername(registerDto.getUsername())) {
+            return new ResponseEntity<>("Username is taken!", HttpStatus.BAD_REQUEST);
         }
 
-        if(userRepository.existsByEmail(signUpRequest.getEmail())) {
-            return new ResponseEntity(new ApiResponse(false, "Email Address already in use!"),
-                    HttpStatus.BAD_REQUEST);
-        }
+        User user = new User();
+        user.setUsername(registerDto.getUsername());
+        user.setPassword(passwordEncoder.encode((registerDto.getPassword())));
 
-        // Creating user's account
-        User user = new User(signUpRequest.getUsername(),
-                signUpRequest.getEmail(), signUpRequest.getPassword());
+        Role roles = roleRepository.findByName(USER).get();
+        user.setRoles(Collections.singleton(roles));
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        Role userRole = roleRepository.findByName(ERole.USER)
-                .orElseThrow(() -> new AppException("User Role not set."));
+        userRepository.save(user);
 
-        user.setRoles(Collections.singleton(userRole));
-
-        User result = userRepository.save(user);
-
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentContextPath().path("/api/users/{username}")
-                .buildAndExpand(result.getUsername()).toUri();
-
-        return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully"));
+        return new ResponseEntity<>("User registered success!", HttpStatus.OK);
     }
 }

@@ -12,11 +12,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Data
@@ -32,7 +29,7 @@ import java.util.Set;
         "email"
 })
         })
-public class User implements UserDetails {
+public class User implements UserDetails{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,18 +59,20 @@ public class User implements UserDetails {
 @Enumerated(EnumType.STRING)
 private ERole role;
 
-    public User(String username, String email, String password) {
-
+    public User(Long id, String username, String password, List<GrantedAuthority> authoritiesList) {
     }
+
+    public User(String username, String password, String toString) {
+    }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
+       // return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+
     }
-@Override
-public String getUsername(){
-        return email;
-}
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -94,8 +93,9 @@ public String getUsername(){
         return true;
     }
 
-    @Override
-    public String getPassword(){
-        return password;
+    public static User create(User user) {
+        List<GrantedAuthority> authoritiesList = new ArrayList<>();
+        authoritiesList.add(new SimpleGrantedAuthority("user"));
+        return new User(user.getId(), user.getUsername(), user.getPassword(), authoritiesList);
     }
 }

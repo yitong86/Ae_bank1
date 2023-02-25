@@ -3,6 +3,7 @@ package com.capstone.Ae_bank.config;
 import com.capstone.Ae_bank.security.AuthTokenFilter;
 
 import com.capstone.Ae_bank.security.JwtAuthenticationEntryPoint;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +19,7 @@ import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class SecurityConfiguration {
     private JwtAuthenticationEntryPoint authEntryPoint;
     private final AuthTokenFilter jwtAuthFilter;

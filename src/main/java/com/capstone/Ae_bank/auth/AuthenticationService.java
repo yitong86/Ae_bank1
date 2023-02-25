@@ -7,6 +7,7 @@ import com.capstone.Ae_bank.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,7 @@ public class AuthenticationService {
                 .username(request.getUsername())
 //                .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(ERole.USER)
+               // .role(ERole.USER)
                 .build();
         repository.save(user);
         var jwtToken = jwtService.generateToken(user);

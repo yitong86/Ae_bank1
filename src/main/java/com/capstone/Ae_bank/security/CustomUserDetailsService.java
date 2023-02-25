@@ -3,6 +3,7 @@ package com.capstone.Ae_bank.security;
 import com.capstone.Ae_bank.auth.User;
 import com.capstone.Ae_bank.repositories.UserRepository;
 import com.sun.security.auth.UserPrincipal;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,16 +15,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
+@AllArgsConstructor
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username not found"));
-        return new User(user.getUsername(), user.getPassword(), user.getAuthorities().toString());
+        return  userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username not found"));
+        //return new User(user.getUsername(), user.getPassword(), user.getAuthorities().toString());
 
     }
 }

@@ -12,11 +12,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.security.PublicKey;
 import java.util.*;
 import java.util.stream.Collectors;
 
 
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -48,27 +50,31 @@ public class User implements UserDetails{
     @JsonIgnore
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<Role> roles = new HashSet<>();
+//    @ManyToMany(fetch = FetchType.EAGER)
+//    @JoinTable(
+//            name = "user_roles",
+//            joinColumns = @JoinColumn(name = "user_id"),
+//            inverseJoinColumns = @JoinColumn(name = "role_id")
+//    )
+//    private Set<Role> roles = new HashSet<>();
 
 @Enumerated(EnumType.STRING)
-private ERole role;
+@ElementCollection(fetch = FetchType.EAGER)
+private Set<ERole> role = new HashSet<>();
+//private ERole role;
 
-    public User(Long id, String username, String password, List<GrantedAuthority> authoritiesList) {
-    }
-
-    public User(String username, String password, String toString) {
-    }
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+       Set<GrantedAuthority> authorities = new HashSet<>();
+       for(var r:this.role){
+           SimpleGrantedAuthority authority = new SimpleGrantedAuthority(r.name());
+            authorities.add(authority);
+       }
+            return authorities;
+//        return Collections.singleton(authority);
+      //          List.of(new SimpleGrantedAuthority(role.name()));
        // return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
 
     }
@@ -92,10 +98,17 @@ private ERole role;
     public boolean isEnabled() {
         return true;
     }
-
-    public static User create(User user) {
-        List<GrantedAuthority> authoritiesList = new ArrayList<>();
-        authoritiesList.add(new SimpleGrantedAuthority("user"));
-        return new User(user.getId(), user.getUsername(), user.getPassword(), authoritiesList);
+    @Override
+    public String getUsername(){
+        return username;
     }
+    @Override
+    public String getPassword(){
+        return password;
+    }
+//    public static User create(User user) {
+//        List<GrantedAuthority> authoritiesList = new ArrayList<>();
+//        authoritiesList.add(new SimpleGrantedAuthority("user"));
+//        return new User(user.getId(), user.getUsername(), user.getPassword(), authoritiesList);
+//    }
 }

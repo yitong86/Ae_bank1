@@ -42,18 +42,24 @@ public class AuthController {
     private JwtService jwtGenerator;
 
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginDto){
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginDto.getUsername(),
-                        loginDto.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = jwtGenerator.generateToken(authentication);
-        //return ResponseEntity.ok(new AuthenticationResponse(token));
-       return new ResponseEntity<>(new AuthResponseDTO(token), HttpStatus.OK);
-    }
-
+//    @PostMapping("/login")
+//    public ResponseEntity<?> login(@RequestBody LoginRequest loginDto){
+//        Authentication authentication = authenticationManager.authenticate(
+//                new UsernamePasswordAuthenticationToken(
+//                        loginDto.getUsername(),
+//                        loginDto.getPassword()));
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+//        String token = jwtGenerator.generateToken(authentication);
+//        //return ResponseEntity.ok(new AuthenticationResponse(token));
+//       return new ResponseEntity<>(new AuthResponseDTO(token), HttpStatus.OK);
+//    }
+private final AuthenticationService service;
+@PostMapping("/login")
+public ResponseEntity<AuthenticationResponse> login(
+        @RequestBody AuthenticationRequest request
+) {
+    return ResponseEntity.ok(service.authenticate(request));
+}
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterRequest registerDto) {
         if (userRepository.existsByUsername(registerDto.getUsername())) {
@@ -65,7 +71,7 @@ public class AuthController {
         user.setPassword(passwordEncoder.encode((registerDto.getPassword())));
 
         Role roles = roleRepository.findByName(USER).get();
-        user.setRoles(Collections.singleton(roles));
+      //  user.setRoles(Collections.singleton(roles));
 
 
         userRepository.save(user);

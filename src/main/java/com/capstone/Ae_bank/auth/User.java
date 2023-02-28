@@ -27,9 +27,9 @@ import java.util.stream.Collectors;
         name = "users",
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = {"username"
-        }),@UniqueConstraint(columnNames = {
-        "email"
-})
+                }),@UniqueConstraint(columnNames = {
+                "email"
+        })
         })
 public class User implements UserDetails{
 
@@ -58,24 +58,24 @@ public class User implements UserDetails{
 //    )
 //    private Set<Role> roles = new HashSet<>();
 
-@Enumerated(EnumType.STRING)
-@ElementCollection(fetch = FetchType.EAGER)
-private Set<ERole> role = new HashSet<>();
+    @Enumerated(EnumType.STRING)
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<ERole> role = new HashSet<>();
 //private ERole role;
 
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-       Set<GrantedAuthority> authorities = new HashSet<>();
-       for(var r:this.role){
-           SimpleGrantedAuthority authority = new SimpleGrantedAuthority(r.name());
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        for(var r:this.role){
+            SimpleGrantedAuthority authority = new SimpleGrantedAuthority(r.name());
             authorities.add(authority);
-       }
-            return authorities;
+        }
+        return authorities;
 //        return Collections.singleton(authority);
-      //          List.of(new SimpleGrantedAuthority(role.name()));
-       // return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+        //          List.of(new SimpleGrantedAuthority(role.name()));
+        // return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
 
     }
 

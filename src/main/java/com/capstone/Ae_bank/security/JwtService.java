@@ -31,7 +31,7 @@ public class JwtService {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
-//    public String generateToken(Authentication authentication) {
+    //    public String generateToken(Authentication authentication) {
 //        String username = authentication.getName();
 //        Date currentDate = new Date();
 //        Date expireDate = new Date(currentDate.getTime());
@@ -44,6 +44,19 @@ public class JwtService {
 //                .compact();
 //        return token;
 //    }
+    public String generateToken(Authentication authentication) {
+        String username = authentication.getName();
+        Date currentDate = new Date();
+        //Date expireDate = new Date(currentDate.getTime() + SECRET_KEY);
+
+        String token = Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .compact();
+        return token;
+    }
     public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
     }

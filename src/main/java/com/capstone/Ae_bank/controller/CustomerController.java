@@ -1,12 +1,17 @@
 package com.capstone.Ae_bank.controller;
 
+import com.capstone.Ae_bank.auth.User;
 import com.capstone.Ae_bank.model.Customer;
 import com.capstone.Ae_bank.repositories.CustomerRepository;
+import com.capstone.Ae_bank.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,12 +22,20 @@ import java.util.Optional;
 public class CustomerController {
     @Autowired
     private CustomerRepository customerRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @PostMapping("/")
-    public ResponseEntity<Customer> createCustomer(@RequestBody Customer newUser) {
-        Customer c = customerRepository.save(newUser);
+    public ResponseEntity<Customer> createCustomer(@RequestBody Customer newCustomer) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User userDetails = (User) authentication.getPrincipal();
+
+        User currentUser = userRepository.findById(userDetails.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        newCustomer.setUser(currentUser);
+        Customer c = customerRepository.save(newCustomer);
         System.out.println(c);
-        return new ResponseEntity<>(c, HttpStatus.CREATED);
+        return new ResponseEntity<>(customerRepository.save(newCustomer), HttpStatus.CREATED);
 
     }
 

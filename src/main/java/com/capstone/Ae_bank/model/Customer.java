@@ -1,6 +1,8 @@
 package com.capstone.Ae_bank.model;
 
 
+import com.capstone.Ae_bank.auth.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,6 +31,13 @@ public class Customer {
     )
     private Set<CreditCard> CreditSet;
 
+    @OneToOne
+    @JoinColumn(
+            name = "users_id",
+            referencedColumnName = "id"
+    )
+    @JsonIgnore
+    private User user;
     @OneToOne(cascade = CascadeType.ALL)
     private CheckingAccount checkingAccount;
     @OneToOne(cascade = CascadeType.ALL)

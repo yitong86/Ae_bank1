@@ -4,7 +4,9 @@ import com.capstone.Ae_bank.auth.User;
 import com.capstone.Ae_bank.repositories.UserRepository;
 import com.sun.security.auth.UserPrincipal;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @AllArgsConstructor
 @RequiredArgsConstructor
+
 public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired

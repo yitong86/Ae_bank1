@@ -18,14 +18,15 @@ import java.util.Optional;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/customers")
+@RequestMapping("/api/auth")
 public class CustomerController {
     @Autowired
     private CustomerRepository customerRepository;
     @Autowired
     private UserRepository userRepository;
 
-    @PostMapping("/")
+    @PostMapping("/newCustomer")
+
     public ResponseEntity<Customer> createCustomer(@RequestBody Customer newCustomer) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User userDetails = (User) authentication.getPrincipal();

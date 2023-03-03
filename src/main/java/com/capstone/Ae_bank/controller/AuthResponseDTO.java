@@ -1,13 +1,16 @@
 package com.capstone.Ae_bank.controller;
 
-import lombok.Data;
+import lombok.*;
 
 @Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class AuthResponseDTO {
-    private String accessToken;
+    private String token;
     private String tokenType = "Bearer ";
+    private String username;
 
-    public AuthResponseDTO(String accessToken) {
-        this.accessToken = accessToken;
-    }
+
 }

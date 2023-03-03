@@ -1,6 +1,7 @@
 package com.capstone.Ae_bank.model;
 
 
+import com.capstone.Ae_bank.enums.AccountStatus;
 import com.capstone.Ae_bank.enums.OperationType;
 import jakarta.persistence.Entity;
 
@@ -8,6 +9,7 @@ import jakarta.persistence.Entity;
 @Entity
 public class CheckingAccount extends Account {
     private double previousTransaction;
+    private final AccountStatus typeStatus = AccountStatus.ACTIVATED;
     private final OperationType type = OperationType.DEBIT;
     public CheckingAccount(double previousTransaction){
 

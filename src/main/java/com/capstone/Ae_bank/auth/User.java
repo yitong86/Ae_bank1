@@ -1,12 +1,15 @@
 package com.capstone.Ae_bank.auth;
 
+import com.capstone.Ae_bank.repositories.UserRepository;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import lombok.*;
 import org.hibernate.annotations.NaturalId;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.validation.constraints.Email;
@@ -111,4 +114,5 @@ public class User implements UserDetails{
 //        authoritiesList.add(new SimpleGrantedAuthority("user"));
 //        return new User(user.getId(), user.getUsername(), user.getPassword(), authoritiesList);
 //    }
+
 }

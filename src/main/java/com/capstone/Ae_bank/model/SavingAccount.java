@@ -1,6 +1,7 @@
 package com.capstone.Ae_bank.model;
 
 
+import com.capstone.Ae_bank.enums.AccountStatus;
 import com.capstone.Ae_bank.enums.OperationType;
 import jakarta.persistence.Entity;
 
@@ -10,7 +11,7 @@ public class SavingAccount extends Account {
     private double interestRate;
     private double previousTransaction;
     private final OperationType type = OperationType.DEBIT;
-
+    private final AccountStatus typeStatus = AccountStatus.ACTIVATED;
 
 
     public SavingAccount() {

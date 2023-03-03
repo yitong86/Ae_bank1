@@ -18,7 +18,12 @@ import java.util.Optional;
 @RequestMapping("/api/checkingAccounts")
 public class CheckingAccountController {
     @Autowired
-    private CheckingAccountRepository checkingAccountRepository;
+    private final CheckingAccountRepository checkingAccountRepository;
+
+    public CheckingAccountController(CheckingAccountRepository checkingAccountRepository) {
+        this.checkingAccountRepository = checkingAccountRepository;
+    }
+
     @PostMapping("/")
     public ResponseEntity<CheckingAccount> createCheckAccount(@RequestBody CheckingAccount newAccount){
         CheckingAccount a= checkingAccountRepository.save(newAccount);
@@ -26,17 +31,17 @@ public class CheckingAccountController {
     }
 
 
-    @GetMapping("/")
+    @GetMapping("/accounts")
     public ResponseEntity<List<CheckingAccount>> getAllAccounts(){
         List<CheckingAccount> accounts = checkingAccountRepository.findAll();
         return new ResponseEntity<>(accounts,HttpStatus.OK);
     }
 
-    @GetMapping("/id/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<CheckingAccount> getAccountById(@PathVariable Long id){
         Optional<CheckingAccount> maybeAccount = checkingAccountRepository.findById(id);
         if(maybeAccount.isEmpty()){
-            return new ResponseEntity<CheckingAccount>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         }
         return new ResponseEntity<>(maybeAccount.get(),HttpStatus.OK);

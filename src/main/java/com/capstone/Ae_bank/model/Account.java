@@ -17,6 +17,7 @@ public abstract class Account {
 
     @Enumerated(EnumType.STRING)
     private OperationType type;
+
     @Enumerated(EnumType.STRING)
     private AccountStatus status;
     protected double balance;

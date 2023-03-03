@@ -3,7 +3,6 @@ package com.capstone.Ae_bank.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoder;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.objenesis.ObjenesisException;
@@ -47,12 +46,12 @@ public class JwtService {
     public String generateToken(Authentication authentication) {
         String username = authentication.getName();
         Date currentDate = new Date();
-        //Date expireDate = new Date(currentDate.getTime() + SECRET_KEY);
+       // Date expireDate = new Date(currentDate.getTime() + SECRET_KEY);
 
         String token = Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * (30 * 24 * 60 * 60) ))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
         return token;
@@ -60,20 +59,26 @@ public class JwtService {
     public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
     }
+    public static final long JWT_TOKEN_VALIDITY = 24 * 60 * 60;
 
-    public String generateToken(
-            Map<String, Object> extraClaims,
-            UserDetails userDetails
-    ) {
-        return Jwts
-                .builder()
-                .setClaims(extraClaims)
+    private String generateToken(Map<String, Object> claims, UserDetails userDetails) {
+        return Jwts.builder()
+                .setClaims(claims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
-                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
-                .compact();
+                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256).compact();
     }
+//    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+//        return Jwts
+//                .builder()
+//                .setClaims(extraClaims)
+//                .setSubject(userDetails.getUsername())
+//                .setIssuedAt(new Date(System.currentTimeMillis()))
+//                .setExpiration(new Date(System.currentTimeMillis() + 1000 * (30 * 24 * 60 * 60)))
+//                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+//                .compact();
+//    }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);

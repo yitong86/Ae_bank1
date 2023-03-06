@@ -66,7 +66,7 @@ public class SavingAccount extends Account {
     public void getPreviousTransaction() {
         if(previousTransaction >0){
             System.out.println("Deposited: " +previousTransaction);
-    }else if(previousTransaction < 0){
+        }else if(previousTransaction < 0){
             System.out.println("Withdraw: "+Math.abs(previousTransaction));
         }else{
             System.out.println("No transaction occurred");

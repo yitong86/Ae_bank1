@@ -50,8 +50,8 @@ public class JwtService {
 
         String token = Jwts.builder()
                 .setSubject(username)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * (30 * 24 * 60 * 60) ))
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000  * 60 * 24 ))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
         return token;
@@ -61,24 +61,24 @@ public class JwtService {
     }
     public static final long JWT_TOKEN_VALIDITY = 24 * 60 * 60;
 
-    private String generateToken(Map<String, Object> claims, UserDetails userDetails) {
-        return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
-                .signWith(getSignInKey(), SignatureAlgorithm.HS256).compact();
-    }
-//    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-//        return Jwts
-//                .builder()
-//                .setClaims(extraClaims)
+//    private String generateToken(Map<String, Object> claims, UserDetails userDetails) {
+//        return Jwts.builder()
+//                .setClaims(claims)
 //                .setSubject(userDetails.getUsername())
 //                .setIssuedAt(new Date(System.currentTimeMillis()))
-//                .setExpiration(new Date(System.currentTimeMillis() + 1000 * (30 * 24 * 60 * 60)))
-//                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
-//                .compact();
+//                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
+//                .signWith(getSignInKey(), SignatureAlgorithm.HS256).compact();
 //    }
+    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+        return Jwts
+                .builder()
+                .setClaims(extraClaims)
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);

@@ -25,13 +25,13 @@ public class SavingAccountController {
     }
 
 
-    @GetMapping("/")
+    @GetMapping("/accounts")
     public ResponseEntity<List<SavingAccount>> getAllAccounts(){
         List<SavingAccount> accounts = savingAccountRepository.findAll();
         return new ResponseEntity<>(accounts,HttpStatus.OK);
     }
 
-    @GetMapping("/id/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<SavingAccount> getAccountById(@PathVariable Long id){
         Optional<SavingAccount> maybeAccount = savingAccountRepository.findById(id);
         if(maybeAccount.isEmpty()){

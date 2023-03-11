@@ -4,8 +4,9 @@ package com.capstone.Ae_bank.model;
 import com.capstone.Ae_bank.enums.AccountStatus;
 import com.capstone.Ae_bank.enums.OperationType;
 import jakarta.persistence.Entity;
+import lombok.Builder;
 
-
+@Builder
 @Entity
 public class CheckingAccount extends Account {
     private double previousTransaction;

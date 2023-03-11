@@ -4,14 +4,15 @@ package com.capstone.Ae_bank.model;
 import com.capstone.Ae_bank.auth.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 
 import java.util.Set;
-
+@Builder
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Customer {
     @Id
@@ -42,19 +43,24 @@ public class Customer {
     private CheckingAccount checkingAccount;
     @OneToOne(cascade = CascadeType.ALL)
     private SavingAccount savingAccount;
-    public Customer() {
-    }
 
-    public Customer(long id, int accountNumber, String name, String email, String phoneNumber, String dateOfBirth, String password, Set<CreditCard> creditSet, CheckingAccount checkingAccount, SavingAccount savingAccount) {
+    public Customer(String name, String email, Long id) {
         this.id = id;
-        this.accountNumber = accountNumber;
         this.name = name;
         this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.dateOfBirth = dateOfBirth;
-        this.password = password;
-        CreditSet = creditSet;
-        this.checkingAccount = checkingAccount;
-        this.savingAccount = savingAccount;
     }
+
+
+//    public Customer(long id, int accountNumber, String name, String email, String phoneNumber, String dateOfBirth, String password, Set<CreditCard> creditSet, CheckingAccount checkingAccount, SavingAccount savingAccount) {
+//        this.id = id;
+//        this.accountNumber = accountNumber;
+//        this.name = name;
+//        this.email = email;
+//        this.phoneNumber = phoneNumber;
+//        this.dateOfBirth = dateOfBirth;
+//        this.password = password;
+//        CreditSet = creditSet;
+//        this.checkingAccount = checkingAccount;
+//        this.savingAccount = savingAccount;
+//    }
 }

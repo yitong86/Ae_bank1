@@ -1,7 +1,7 @@
 package com.capstone.Ae_bank.repositories;
 
 
-import com.capstone.Ae_bank.model.CheckingAccount;
+
 import com.capstone.Ae_bank.model.SavingAccount;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;

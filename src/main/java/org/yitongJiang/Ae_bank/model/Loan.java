@@ -4,8 +4,11 @@ package org.yitongJiang.Ae_bank.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.Builder;
+
 //child class loan Account field and get and set
 @Entity
+@Builder
 public class Loan extends Account {
     private String itemName;
     private int loanNumber;
